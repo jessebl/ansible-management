@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+# Copyright (c) 2018 Jesse Bulson-Lewis
 # Copyright (c) 2017 Ansible Project
+# https://github.com/ansible/ansible
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 import argparse
@@ -73,10 +75,8 @@ def list_groups(api):
             hostvars[member] = {}
 
     inventory['_meta'] = {'hostvars': hostvars}
-    inv_string = json.dumps(inventory, indent=1, sort_keys=True)
-    print(inv_string)
 
-    return None
+    return inventory
 
 
 def parse_args():
@@ -112,6 +112,37 @@ def get_host_attributes(api, host):
     except errors.NotFound as e:
         return {}
 
+def filter_inventory(inventory, group):
+    if not inventory.has_key(group):
+        raise ValueError('"%s" group not found in FreeIPA' % group)
+    group_hosts = inventory[group]['hosts']
+    for group in inventory:
+        if group is not '_meta':
+            hosts = inventory[group]['hosts']
+            inventory[group]['hosts'] =\
+                    [host for host in hosts if host in group_hosts]
+        else:
+            hostvars = {}
+            for host in group_hosts:
+                hostvars[host] = inventory['_meta']['hostvars'][host]
+            inventory['_meta']['hostvars'] = hostvars
+
+    return inventory
+
+def filter_main(group):
+    args = parse_args()
+    api = initialize()
+
+    if args.host:
+        print(get_host_attributes(api, args.host))
+    elif args.list:
+        inventory = list_groups(api)
+        filtered_inventory = filter_inventory(inventory, group)
+        print_inventory(filtered_inventory)
+
+def print_inventory(inventory):
+    inv_string = json.dumps(inventory, indent=1, sort_keys=True)
+    print(inv_string)
 
 if __name__ == '__main__':
     args = parse_args()
@@ -120,4 +151,5 @@ if __name__ == '__main__':
     if args.host:
         print(get_host_attributes(api, args.host))
     elif args.list:
-        list_groups(api)
+        inventory = list_groups(api)
+        print_inventory(inventory)
