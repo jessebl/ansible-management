@@ -1,0 +1,25 @@
+---
+- name: pin iputils version in CentOS containers
+  # iputils cannot be upgraded in unprivileged CentOS LXC containers
+  # since cap_set_file cannot be set
+  ini_file:
+    path: /etc/yum.conf
+    section: main
+    option: exclude
+    value: iputils
+  when: >
+    ansible_pkg_mgr == 'yum' and
+    ansible_virtualization_role == "guest" and
+    ansible_virtualization_type == "lxc"
+  become: true
+- name: upgraded yum packages
+  yum:
+    name: '*'
+    state: latest
+  when: ansible_pkg_mgr == 'yum'
+  become: true
+- name: upgraded apt packages
+  apt:
+    upgrade: dist
+  when: ansible_pkg_mgr == 'apt'
+  become: true
