@@ -1,4 +1,12 @@
 ---
+- name: keys add iff they are in files/pubkeys
+  authorized_key:
+    user: root
+    # Pipe to concatenate SSH keys
+    # See https://stackoverflow.com/a/38879787
+    key: "{{ lookup('pipe', 'cat {{ key_dir }}/*pub') }}"
+    exclusive: "{{ keys_exclusive }}"
+  become: true
 - name: set timezone
   timezone:
     name: "{{ timezone }}"
