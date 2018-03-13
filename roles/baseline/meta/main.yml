@@ -1,0 +1,19 @@
+galaxy_info:
+  author: Jesse
+  description: Standardizes timezone, locale, and packages
+  company: Craptops
+
+  issue_tracker_url: https://git.craptops.xyz/kantsdog/craptops-ansible/issues
+
+  license: GPLv3
+
+  min_ansible_version: 1.2
+
+  platforms:
+  - Ubuntu
+  - CentOS
+
+  galaxy_tags:
+    - system
+
+dependencies: []

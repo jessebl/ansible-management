@@ -1,0 +1,14 @@
+- name: packages for apt distros
+  apt:
+    name:
+      -  sudo
+      - freeipa-client
+      - zsh
+  when: ansible_pkg_mgr == 'apt'
+- name: packages for yum distros
+  yum:
+    name:
+      - sudo
+      - ipa-client
+      - zsh
+  when: ansible_pkg_mgr == 'yum'
