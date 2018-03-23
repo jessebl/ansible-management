@@ -5,7 +5,8 @@ Collected playbooks and inventories for my own use.
 ## Inventories
 
 `<group>.py` (e.g. `production.py`) are dynamic inventories that provide all
-the hosts from `<group>` along with their group membership.
+the hosts from `<group>` in FreeIPA along with their group memberships. Requires
+that the local user already have a valid Kerberos tgt (use `kinit`).
 
 ## Playbooks
 
