@@ -17,6 +17,6 @@
   # Module does not seem to work on CentOS 7
   # Module uses /etc/locale.gen, which CentOS 7 might not
   when: 
-    (ansible_distribution != "CentOS") or
-    (ansible_distribution_major_version != "7")
+    (ansible_distribution + ansible_distribution_major_version != "CentOS7") and
+    (ansible_distribution != "Fedora")
 - import_tasks: packages.yml
