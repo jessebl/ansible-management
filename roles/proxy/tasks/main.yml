@@ -1,0 +1,33 @@
+---
+- name: epel installed
+  yum: name=epel-release
+  become: yes
+
+- name: packages installed
+  yum:
+    name:
+      - nginx
+      - certbot-nginx
+  become: yes
+
+- name: nginx conf
+  template:
+    src: nginx.conf
+    dest: "{{ nginx_conf }}"
+  become: yes
+  notify: restart nginx
+
+- name: sites_enabled directory exists
+  file:
+   path: "{{ sites_enabled }}"
+   state: directory
+  become: yes
+
+- name: sites_enabled
+  template:
+    src: "{{ item }}"
+    dest: "{{ sites_enabled }}/{{ item | basename }}"
+  with_fileglob:
+    - ../templates/sites-enabled/*
+  become: yes
+  notify: restart nginx

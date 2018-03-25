@@ -1,0 +1,19 @@
+server {
+
+    listen       443 default ssl;
+    server_name  music.{{ domain }};
+
+    # Proxy to the Airsonic server
+    location /airsonic {
+        proxy_set_header X-Real-IP         $remote_addr;
+        proxy_set_header X-Forwarded-For   $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto https;
+        proxy_set_header X-Forwarded-Host  $http_host;
+        proxy_set_header Host              $http_host;
+        proxy_max_temp_file_size           0;
+        proxy_pass                         http://airsonic:8080;
+        proxy_redirect                     http:// https://;
+    }
+    ssl_certificate {{ ssl_certificate }};
+    ssl_certificate_key {{ ssl_certificate_key }};
+}

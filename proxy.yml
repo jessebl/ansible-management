@@ -1,0 +1,12 @@
+---
+- hosts: proxy
+  vars:
+    - domain: craptops.xyz
+    - ssl_certificate: /etc/letsencrypt/live/craptops.xyz/fullchain.pem
+    - ssl_certificate_key: /etc/letsencrypt/live/craptops.xyz/privkey.pem
+    - nginx_conf: /etc/nginx/nginx.conf
+    - nginx_user: nginx
+    - sites_enabled: /etc/nginx/sites-enabled
+
+  roles:
+    - proxy
