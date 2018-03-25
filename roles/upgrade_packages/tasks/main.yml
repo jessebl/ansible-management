@@ -18,6 +18,12 @@
     state: latest
   when: ansible_pkg_mgr == 'yum'
   become: true
+- name: upgraded dnf packages
+  dnf:
+    name: "*"
+    state: latest
+  when: ansible_pkg_mgr == 'dnf'
+  become: true
 - name: upgraded apt packages
   apt:
     upgrade: dist
